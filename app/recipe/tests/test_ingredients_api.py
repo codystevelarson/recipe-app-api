@@ -14,7 +14,9 @@ INGREDIENTS_URL = reverse('recipe:ingredient-list')
 
 
 def sample_user():
-    return get_user_model().objects.create_user('test@pizzacoffee.net', 'testpass')
+    return get_user_model().objects.create_user(
+        'test@pizzacoffee.net', 'testpass'
+    )
 
 
 class PublicIngredientsApiTests(TestCase):
@@ -67,7 +69,7 @@ class PrivateIngredientsApiTests(TestCase):
     def test_create_ingredients_successful(self):
         ''' Test create a new ingredient '''
         payload = {'name': 'Onion'}
-        res = self.client.post(INGREDIENTS_URL, payload)
+        self.client.post(INGREDIENTS_URL, payload)
 
         exists = Ingredient.objects.filter(
             user=self.user, name=payload['name']).exists()

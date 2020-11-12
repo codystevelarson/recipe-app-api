@@ -13,7 +13,9 @@ TAGS_URL = reverse('recipe:tag-list')
 
 
 def sample_user():
-    return get_user_model().objects.create_user('test@pizzacoffee.net', 'testpass')
+    return get_user_model().objects.create_user(
+        'test@pizzacoffee.net', 'testpass'
+    )
 
 
 class PublicTagsTests(TestCase):
