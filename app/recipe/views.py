@@ -44,9 +44,28 @@ class RecipeViewSet(viewsets.ModelViewSet):
     authentication_classes = (TokenAuthentication, )
     permission_classes = (IsAuthenticated, )
 
+    def _params_to_ints(self, qs):
+        ''' Convert a list of string ids to integers '''
+        # foreach syntax on a split str array
+        return [int(str_id) for str_id in qs.split(',')]
+
     def get_queryset(self):
         ''' Retrieve the recipes for the authenticated user '''
-        return self.queryset.filter(user=self.request.user)
+        tags = self.request.query_params.get('tags')
+        ingredients = self.request.query_params.get('ingredients')
+        queryset = self.queryset
+
+        if tags:
+            tag_ids = self._params_to_ints(tags)
+            # Django syntax for filtering on foreign key objects
+            # FK_Obj__PROP__IN = looking for prop in list
+            queryset = queryset.filter(tags__id__in=tag_ids)
+
+        if ingredients:
+            ingredient_ids = self._params_to_ints(ingredients)
+            queryset = queryset.filter(ingredients__id__in=ingredient_ids)
+
+        return queryset.filter(user=self.request.user)
 
     # Overriding the get serializer class method
     def get_serializer_class(self):
