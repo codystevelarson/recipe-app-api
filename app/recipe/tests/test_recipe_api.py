@@ -182,7 +182,7 @@ class PrivateRecipeApiTest(TestCase):
         payload = {'title': 'Chicken Pudding', 'tags': [new_tag.id]}
 
         url = detail_url(recipe.id)
-        res = self.client.patch(url, payload)
+        self.client.patch(url, payload)
 
         recipe.refresh_from_db()
         tags = recipe.tags.all()
